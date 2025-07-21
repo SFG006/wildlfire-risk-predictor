@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     # ✅ Configuration
     MAP_KEY = os.getenv("map_key")
     COUNTRY_CODE = "USA"
-    BUCKET_NAME = "wildfire-risk-data-sfg"
+    BUCKET_NAME = os.getenv("bucket_name")
     today = datetime.today().strftime("%Y-%m-%d")
 
     # 🔗 NASA FIRMS API URL
