@@ -1,12 +1,13 @@
 import os
 import boto3
+import json
 import requests as rq
 from datetime import datetime
 
 def lambda_handler(event, context):
     # ✅ Configuration
     MAP_KEY = os.getenv("map_key")
-    COUNTRY_CODE = "USA"
+    COUNTRY_CODE = os.getenv("country_code")
     BUCKET_NAME = os.getenv("bucket_name")
     today = datetime.today().strftime("%Y-%m-%d")
 
@@ -49,3 +50,23 @@ def lambda_handler(event, context):
 
     except Exception as e:
         print("🚨 An unexpected error occurred:", str(e))
+
+
+
+# Invoking lambda 2
+def invoke_weather_lambda(top_hotspots):
+    lambda_client = boto3.client("lambda")
+    payload = {
+        "hotspots": top_hotspots
+    }
+
+    try:
+        response = lambda_client.invoke(
+            FunctionName="fetchWeatherData",
+            InvocationType="Event",  # Async invocation
+            Payload=json.dumps(payload)
+        )
+        print("✅ Invoked fetchWeatherData Lambda.")
+        print(response)
+    except Exception as e:
+        print("❌ Error invoking fetchWeatherData:", e)
